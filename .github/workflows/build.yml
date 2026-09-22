@@ -24,18 +24,18 @@ jobs:
           flutter-version: '3.x'
           channel: 'stable'
 
-      - name: Extract project ZIP
+      - name: Extract project ZIP safely
         run: |
-          mkdir -p extracted_project
-          unzip edki.zip -d extracted_project
+          # Распаковываем архив с принудительной конвертацией кодировок для кириллицы
+          unzip -O CP866 edki.zip -d extracted_project || unzip edki.zip -d extracted_project
 
       - name: Build APK
         run: |
-          # Знаходимо шлях до папки з pubspec.yaml автоматично
-          PROJECT_PATH=$(find extracted_project -name "pubspec.yaml" -exec dirname {} \; | head -n 1)
-          echo "Project path: $PROJECT_PATH"
+          # Ищем, где лежит pubspec.yaml, и переходим туда
+          PROJECT_DIR=$(find extracted_project -name "pubspec.yaml" -exec dirname {} \; | head -n 1)
+          echo "Found project at: $PROJECT_DIR"
+          cd "$PROJECT_DIR"
           
-          cd "$PROJECT_PATH"
           flutter pub get
           flutter build apk --release
 
