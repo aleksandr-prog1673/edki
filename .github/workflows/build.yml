@@ -32,7 +32,11 @@ jobs:
       - name: Build APK
         run: |
           cd extracted_project
-          cd $(ls -d */)
+          # Знаходимо першу папок усередині і заходимо в неї автоматично
+          TARGET_DIR=$(find . -mindepth 1 -maxdepth 1 -type d | head -n 1)
+          echo "Entering directory: $TARGET_DIR"
+          cd "$TARGET_DIR"
+          
           flutter pub get
           flutter build apk --release
 
