@@ -27,14 +27,12 @@ jobs:
       - name: Extract project ZIP
         run: |
           mkdir -p extracted_project
-          unzip \*.zip -d extracted_project
+          unzip edki.zip -d extracted_project
 
       - name: Build APK
         run: |
           cd extracted_project
-          PROJECT_DIR=$(find . -name "pubspec.yaml" -exec dirname {} \; | head -n 1)
-          echo "Found project at: $PROJECT_DIR"
-          cd "$PROJECT_DIR"
+          cd $(ls -d */)
           flutter pub get
           flutter build apk --release
 
