@@ -31,12 +31,11 @@ jobs:
 
       - name: Build APK
         run: |
-          cd extracted_project
-          # Знаходимо першу папок усередині і заходимо в неї автоматично
-          TARGET_DIR=$(find . -mindepth 1 -maxdepth 1 -type d | head -n 1)
-          echo "Entering directory: $TARGET_DIR"
-          cd "$TARGET_DIR"
+          # Знаходимо шлях до папки з pubspec.yaml автоматично
+          PROJECT_PATH=$(find extracted_project -name "pubspec.yaml" -exec dirname {} \; | head -n 1)
+          echo "Project path: $PROJECT_PATH"
           
+          cd "$PROJECT_PATH"
           flutter pub get
           flutter build apk --release
 
